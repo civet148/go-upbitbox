@@ -1,4 +1,4 @@
-package upbitbox
+package upbit
 
 import (
 	"bufio"

@@ -1,9 +1,10 @@
-package upbitbox
+package upbit
 
 import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -27,6 +28,7 @@ type Quotation interface {
 	Candles(symbol string, unit, count int) ([]float64, []float64, []float64, []float64, error)
 	OrderBook(symbol string) (OrderBook, error)
 	Markets() ([]string, error)
+	KRWMarkets() ([]string, error)
 	Tickers(symbols []string) ([]Ticker, error)
 }
 
@@ -217,6 +219,36 @@ func (c *client) OrderBook(symbol string) (OrderBook, error) {
 
 // 업비트에 등록된 마켓이름들을 반환
 func (c *client) Markets() ([]string, error) {
+	ret, err := GetMarketCodes()
+	if err != nil {
+		return nil, err
+	}
+
+	return Map(ret, func(market MarketCode) string {
+		return market.Code
+	}), nil
+}
+
+// 업비트에 등록된 마켓이름들을 반환
+func (c *client) KRWMarkets() ([]string, error) {
+	markets, err := c.Markets()
+	if err != nil {
+		return []string{}, err
+	}
+
+	ret := make([]string, 0)
+	for _, m := range markets {
+		if !strings.Contains(m, "KRW-") {
+			continue
+		}
+		ret = append(ret, m)
+	}
+
+	return ret, nil
+}
+
+// 업비트에 등록된 마켓이름들을 반환
+func (c *client) upbit() ([]string, error) {
 	ret, err := GetMarketCodes()
 	if err != nil {
 		return nil, err

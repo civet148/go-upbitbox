@@ -1,4 +1,4 @@
-package upbitbox
+package upbit
 
 import (
 	"encoding/json"
@@ -11,28 +11,6 @@ import (
 
 	"github.com/gorilla/websocket"
 )
-
-// 이 외에도 몇 가지 요청 예시를 소개하자면,
-
-// KRW-BTC, BTC-XRP 마켓의 체결 정보
-// [{"ticket":"UNIQUE_TICKET"},{"type":"trade","codes":["KRW-BTC","BTC-XRP"]}]
-
-// KRW-BTC, BTC-XRP 마켓의 호가 정보
-// [{"ticket":"UNIQUE_TICKET"},{"type":"orderbook","codes":["KRW-BTC","BTC-XRP"]}]
-
-// KRW-BTC 마켓의 1~3호가, BTC-XRP 마켓의 1~5호가 정보
-// [{"ticket":"UNIQUE_TICKET"},{"type":"orderbook","codes":["KRW-BTC.3","BTC-XRP.5"]}]
-
-// KRW-BTC 마켓의 체결 정보, KRW-ETH 마켓의 호가 정보
-// [{"ticket":"UNIQUE_TICKET"},{"type":"trade","codes":["KRW-BTC"]},{"type":"orderbook","codes":["KRW-ETH"]}]
-
-// KRW-BTC 마켓의 체결 정보, KRW-ETH 마켓의 호가 정보, KRW-EOS 마켓의 현재가 정보
-// [{"ticket":"UNIQUE_TICKET"},{"type":"trade","codes":["KRW-BTC"]},{"type":"orderbook","codes":["KRW-ETH"]},{"type":"ticker", "codes":["KRW-EOS"]}]
-
-//ping := []byte(`[{"ticket":"UNIQUE_TICKET"},{"type":"trade","codes":["KRW-STX"]}]`)
-//ping := []byte(`[{"ticket":"UNIQUE_TICKET"},{"type":"orderbook","codes":["KRW-STX.3"]}]`)
-//ping := []byte(`[{"ticket":"UNIQUE_TICKET"},{"type":"ticker","codes":["KRW-STX"]}, {"format":"SIMPLE"}]`)
-//ping := []byte(`[{"ticket":"UNIQUE_TICKET"},{"type":"ticker","codes":["KRW-STX"]}]`)
 
 type MessageHandler func(message []byte)
 

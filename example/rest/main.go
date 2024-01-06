@@ -1,10 +1,9 @@
 package main
 
 import (
-	"github.com/DK-Lite/go-upbitbox"
+	upbit "github.com/DK-Lite/go-upbitbox"
 )
 
 func main() {
-	upbitbox.NewClient("", "")
-
+	upbit.NewClient("", "")
 }
