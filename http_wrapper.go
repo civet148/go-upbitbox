@@ -1,11 +1,11 @@
 package upbit
 
 import (
-	"bufio"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -84,10 +84,9 @@ func doRequest(client *http.Client, req *http.Request, v interface{}) error {
 
 	statusOK := resp.StatusCode >= 200 && resp.StatusCode < 300
 	if !statusOK {
-		scanner := bufio.NewScanner(resp.Body)
-		return fmt.Errorf("Status is not ok: %d, %s", resp.StatusCode, scanner.Text())
+		msg, _ := ioutil.ReadAll(resp.Body)
+		return fmt.Errorf("status is not ok, code [%d] error [%s]", resp.StatusCode, msg)
 	}
-
 	return parseBody(resp.Body, v)
 }
 
