@@ -23,7 +23,8 @@ func GetAccounts(auth Auth) ([]Account, error) {
 }
 
 // 업비트에 주문리스트를 요청할 수 있다.
-//  state: "wait", "watch", "done", "cancel"
+//
+//	state: "wait", "watch", "done", "cancel"
 func GetOrders(code string, state string, auth Auth) ([]Order, error) {
 	if auth == (Auth{}) {
 		panic("Auth keys not founded")
@@ -56,21 +57,28 @@ func GetOrder(ticket string, auth Auth) (Order, error) {
 }
 
 // 업비트 코인 주문
-//  side: "bid(매수)", "ask(매도)"
-//  ordType: "limit(지정가)", "price(시장가 매수)", "market(시장가 매도)"
-func Place(code string, price, amount float64, side, ordType string, auth Auth) (Order, error) {
+//
+//	side: "bid(매수)", "ask(매도)"
+//	ordType: "limit(지정가)", "price(시장가 매수)", "market(시장가 매도)", "tif: IOC/FOK"
+func Place(code string, price, amount float64, side, ordType string, auth Auth, tif ...string) (Order, error) {
 	if auth == (Auth{}) {
 		panic("Auth keys not founded")
 	}
 
 	url := serverUrl + "/v1/orders"
-
+	var timeInForce string
+	if ordType == "limit" || ordType == "best" {
+		if len(tif) != 0 {
+			timeInForce = tif[0]
+		}
+	}
 	p := PlaceParam{
-		Code:      code,
-		Side:      side,
-		Price:     strings.TrimRight(fmt.Sprintf("%.6f", price), "0"),
-		Amount:    strings.TrimRight(fmt.Sprintf("%.6f", amount), "0"),
-		OrderType: ordType,
+		Code:        code,
+		Side:        side,
+		Price:       strings.TrimRight(fmt.Sprintf("%.6f", price), "0"),
+		Amount:      strings.TrimRight(fmt.Sprintf("%.6f", amount), "0"),
+		OrderType:   ordType,
+		TimeInForce: timeInForce,
 	}
 
 	ret := Order{}

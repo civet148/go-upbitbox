@@ -1,5 +1,10 @@
 package upbit
 
+const (
+	IOC = "IOC"
+	FOK = "FOK"
+)
+
 type BaseParam struct {
 	IsDetails bool `url:"isDetails"`
 }
@@ -19,12 +24,13 @@ type OrderParam struct {
 }
 
 type PlaceParam struct {
-	Code       string `url:"market"`
-	Side       string `url:"side"` //bid, ask
-	Amount     string `url:"volume"`
-	Price      string `url:"price"`
-	OrderType  string `url:"ord_type"`   // limit price market
-	Identifier string `url:"identifier"` // uniq
+	Code        string `url:"market"`
+	Side        string `url:"side"` //bid, ask
+	Amount      string `url:"volume"`
+	Price       string `url:"price"`
+	OrderType   string `url:"ord_type"`      // limit price market
+	Identifier  string `url:"identifier"`    // uniq
+	TimeInForce string `url:"time_in_force"` // FOK/IOC...
 }
 
 type CancelParam struct {
