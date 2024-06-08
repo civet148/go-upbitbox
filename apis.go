@@ -75,8 +75,8 @@ func Place(code string, price, amount float64, side, ordType string, auth Auth, 
 	p := PlaceParam{
 		Code:        code,
 		Side:        side,
-		Price:       strings.TrimRight(fmt.Sprintf("%.6f", price), "0"),
-		Amount:      strings.TrimRight(fmt.Sprintf("%.6f", amount), "0"),
+		Price:       strings.TrimRight(fmt.Sprintf("%.8f", price), "0"),
+		Amount:      strings.TrimRight(fmt.Sprintf("%.8f", amount), "0"),
 		OrderType:   ordType,
 		TimeInForce: timeInForce,
 	}
