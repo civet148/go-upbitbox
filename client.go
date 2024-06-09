@@ -124,12 +124,12 @@ func (c *client) Accounts() ([]Account, error) {
 }
 
 // 코인을 산다.
-func (c *client) Buy(symbol string, price, amount float64, tif ...string) (Order, error) {
-	return Place(symbol, price, amount, "bid", "limit", c.auth, tif...)
+func (c *client) Buy(symbol string, price, amount float64, orderNo, timeInForce string) (Order, error) {
+	return Place(symbol, price, amount, "bid", "limit", c.auth, orderNo, timeInForce)
 }
 
 // 코인을 시장가에 산다.
-func (c *client) BuyForce(symbol string, price, amount float64, tif ...string) (Order, error) {
+func (c *client) BuyForce(symbol string, price, amount float64, orderNo, timeInForce string) (Order, error) {
 	for {
 		book, err := c.OrderBook(symbol)
 		if err != nil {
@@ -138,17 +138,17 @@ func (c *client) BuyForce(symbol string, price, amount float64, tif ...string) (
 		}
 
 		newPrice := book.OrderBookUnits[8].AskPrice
-		return Place(symbol, newPrice, amount, "bid", "limit", c.auth, tif...)
+		return Place(symbol, newPrice, amount, "bid", "limit", c.auth, orderNo, timeInForce)
 	}
 }
 
 // 코인을 판다.
-func (c *client) Sell(symbol string, price, amount float64, tif ...string) (Order, error) {
-	return Place(symbol, price, amount, "ask", "limit", c.auth, tif...)
+func (c *client) Sell(symbol string, price, amount float64, orderNo, timeInForce string) (Order, error) {
+	return Place(symbol, price, amount, "ask", "limit", c.auth, orderNo, timeInForce)
 }
 
 // 코인을 시장가에 판다.
-func (c *client) SellForce(symbol string, price, amount float64, tif ...string) (Order, error) {
+func (c *client) SellForce(symbol string, price, amount float64, orderNo, timeInForce string) (Order, error) {
 	for {
 		book, err := c.OrderBook(symbol)
 		if err != nil {
@@ -157,7 +157,7 @@ func (c *client) SellForce(symbol string, price, amount float64, tif ...string) 
 		}
 
 		newPrice := book.OrderBookUnits[8].BidPrice
-		return Place(symbol, newPrice, amount, "ask", "limit", c.auth, tif...)
+		return Place(symbol, newPrice, amount, "ask", "limit", c.auth, orderNo, timeInForce)
 	}
 }
 
@@ -167,13 +167,13 @@ func (c *client) Cancel(ticket string) (Order, error) {
 }
 
 // 주문을 수정할 수 있다.
-func (c *client) Replace(ticket string, price, amount float64, tif ...string) (Order, error) {
+func (c *client) Replace(ticket string, price, amount float64, orderNo, timeInForce string) (Order, error) {
 	ret, err := Cancel(ticket, c.auth)
 	if err != nil {
 		return ret, errors.New("cancel fail: " + err.Error())
 	}
 
-	return Place(ret.Code, price, amount, ret.Side, ret.Type, c.auth, tif...)
+	return Place(ret.Code, price, amount, ret.Side, ret.Type, c.auth, orderNo, timeInForce)
 }
 
 // 마켓의 가격을 반환

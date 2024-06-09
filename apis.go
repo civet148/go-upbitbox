@@ -60,18 +60,12 @@ func GetOrder(ticket string, auth Auth) (Order, error) {
 //
 //	side: "bid(매수)", "ask(매도)"
 //	ordType: "limit(지정가)", "price(시장가 매수)", "market(시장가 매도)", "tif: IOC/FOK"
-func Place(code string, price, amount float64, side, ordType string, auth Auth, tif ...string) (Order, error) {
+func Place(code string, price, amount float64, side, ordType string, auth Auth, orderNo string, timeInForce string) (Order, error) {
 	if auth == (Auth{}) {
 		panic("Auth keys not founded")
 	}
 
 	url := serverUrl + "/v1/orders"
-	var timeInForce string
-	if ordType == "limit" || ordType == "best" {
-		if len(tif) != 0 {
-			timeInForce = tif[0]
-		}
-	}
 	p := PlaceParam{
 		Code:        code,
 		Side:        side,
@@ -79,6 +73,7 @@ func Place(code string, price, amount float64, side, ordType string, auth Auth, 
 		Amount:      strings.TrimRight(fmt.Sprintf("%.8f", amount), "0"),
 		OrderType:   ordType,
 		TimeInForce: timeInForce,
+		Identifier:  orderNo,
 	}
 
 	ret := Order{}
